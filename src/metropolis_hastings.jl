@@ -23,7 +23,7 @@ function sample_salpeter(p::Salpeter)
 
     max_likelihood = Mmin^(1.0 - α)
 
-    masses = []
+    masses = zeros(N)
 
     for i = 1:N
         log_M = rand(Uniform(log_Mmin, log_Mmax))
@@ -32,7 +32,7 @@ function sample_salpeter(p::Salpeter)
         accept = rand(Uniform(0.0, max_likelihood))
 
         if accept < likelihood
-            append!(masses, M)
+            masses[i] = M
         end
     end
 
@@ -47,13 +47,14 @@ end
 
 function train(p::Salpeter, α₀, stepsize, iter)
     accepted = 0
-    αₛ = [α₀]
+    αₛ = zeros(p.N)
+    αₛ[1] = α₀
 
     αᵢ = α₀
     p.α = αᵢ
     D = p.D
 
-    for n = 1:iter
+    for i = 1:iter
         αᵢ₋₁ = αᵢ
         loglikeᵢ₋₁ = evaluate_logLikelihood(p)
         αᵢ = rand(Normal(αᵢ₋₁, stepsize))
@@ -61,15 +62,15 @@ function train(p::Salpeter, α₀, stepsize, iter)
         loglikeᵢ = evaluate_logLikelihood(p)
 
         if loglikeᵢ > loglikeᵢ₋₁
-            append!(αₛ, αᵢ)
+            αₛ[i] = αᵢ
             accepted = accepted + 1
         else
             u = rand(Uniform(0.0, 1.0))
             if u < exp(loglikeᵢ - loglikeᵢ₋₁)
-                append!(αₛ, αᵢ)
+                αₛ[i] = αᵢ
                 accepted = accepted + 1
             else
-                append!(αₛ, αᵢ₋₁)
+                αₛ[i] = αᵢ₋₁
             end
         end
     end
