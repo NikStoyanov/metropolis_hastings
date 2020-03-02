@@ -395,7 +395,7 @@ version = "1.3.6+2"
 
 [[metropolis_hastings]]
 deps = ["Distributions", "Random", "UnPack"]
-git-tree-sha1 = "1e12bee7afa304348b5b42cb37173066713bf5dd"
+git-tree-sha1 = "3bf5175998446544f86a018f2324c8b2c9045b44"
 repo-rev = "master"
 repo-url = "/home/nik/git/other/metropolis_hastings/."
 uuid = "a2ae0a45-e06f-4ae9-a377-956007eff19f"
